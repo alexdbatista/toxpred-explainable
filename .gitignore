@@ -27,8 +27,8 @@ pip-delete-this-directory.txt
 .AppleDouble
 .LSOverride
 
-# Model files (too large for git)
-models/*.pkl
+# Model files - INCLUDE for deployment
+# models/*.pkl  # Commented out - models needed for deployment
 models/*.h5
 models/*.pt
 
@@ -58,3 +58,30 @@ htmlcov/
 tmp/
 temp/
 *.tmp
+
+# Non-essential documentation (development notes)
+DEEP_REVIEW_REPORT.md
+DEPLOYMENT_CHECKLIST.md
+DESIGN_UX_REVIEW.md
+IMPROVEMENT_RECOMMENDATIONS.md
+IMPROVEMENTS.md
+MODEL_ENHANCEMENTS.md
+PRE_LAUNCH_CHECKLIST.md
+PROFESSIONAL_ENHANCEMENTS.md
+PROJECT_COMPLETE.md
+SETUP_COMPLETE.md
+VISUAL_CHANGES.md
+
+# Utility scripts (not needed for app)
+color_replacer.py
+update_color.py
+train_bbb.py
+
+# Dev containers
+.devcontainer/
+
+# Backup files
+*.corrupted
+*.broken
+*.backup
+*.bak
