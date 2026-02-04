@@ -313,6 +313,8 @@ st.markdown("""
         height: 200%;
         background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
         animation: searchPulse 4s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 0;
     }
     
     @keyframes searchPulse {
@@ -327,13 +329,17 @@ st.markdown("""
         text-align: center;
         margin-bottom: 0.5rem;
         text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+        position: relative;
+        z-index: 1;
     }
     
     .search-hero-subtitle {
         font-size: 1rem;
         color: rgba(255,255,255,0.9);
         text-align: center;
-        margin-bottom: 1.5rem;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 1;
     }
     
     .search-input-wrapper {
@@ -784,14 +790,12 @@ if page == "🔬 Single Prediction":
     search_col1, search_col2, search_col3 = st.columns([0.5, 3, 0.5])
     
     with search_col2:
-        st.markdown("<div class='search-input-wrapper'>", unsafe_allow_html=True)
-        
-        # Input method selection - more prominent
+        # Input method selection - styled as tabs
         input_method = st.radio(
-            "🔍 Search by:",
+            "Input method",
             ["🔤 Chemical Name", "🧬 SMILES String"],
             horizontal=True,
-            help="Choose to search by common name (e.g., 'aspirin') or SMILES notation for precise structure"
+            label_visibility="collapsed"
         )
         
         # Initialize session state for inputs
@@ -861,8 +865,6 @@ if page == "🔬 Single Prediction":
                     st.session_state.example_value = value
                     st.session_state.example_type = 'name' if input_method == "🔤 Chemical Name" else 'smiles'
                     st.rerun()
-        
-        st.markdown("</div>", unsafe_allow_html=True)
         
         # Enhanced analyze button
         if st.button("🚀 Analyze Molecule", type="primary", use_container_width=True):
@@ -966,8 +968,6 @@ if page == "🔬 Single Prediction":
                         'timestamp': pd.Timestamp.now().strftime('%Y-%m-%d %H:%M')
                     })
                     st.session_state.molecule_history = st.session_state.molecule_history[-10:]
-        
-        st.markdown("</div>", unsafe_allow_html=True)  # Close search-input-wrapper
     
     # ===============================
     # RESULTS SECTION (after search)
