@@ -768,8 +768,70 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Understanding Metrics - Expandable Educational Section
-with st.expander("📚 **Understanding These Metrics** - Click to learn what each parameter means", expanded=False):
+# Understanding Metrics - Highlighted Educational Section
+st.markdown("""
+<style>
+    .metrics-guide-banner {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        padding: 20px;
+        margin: 20px 0;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        animation: pulse-guide 2s ease-in-out infinite;
+    }
+    @keyframes pulse-guide {
+        0%, 100% { box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); }
+        50% { box-shadow: 0 4px 25px rgba(102, 126, 234, 0.5); }
+    }
+    .metrics-guide-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 10px;
+    }
+    .metrics-guide-icon {
+        font-size: 2rem;
+        animation: bounce-book 1s ease-in-out infinite;
+    }
+    @keyframes bounce-book {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+    .metrics-guide-title {
+        color: white;
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin: 0;
+    }
+    .metrics-guide-subtitle {
+        color: rgba(255,255,255,0.9);
+        font-size: 0.95rem;
+        margin: 0;
+    }
+    .metrics-guide-badge {
+        display: inline-block;
+        background: rgba(255,255,255,0.2);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-top: 10px;
+    }
+</style>
+<div class='metrics-guide-banner'>
+    <div class='metrics-guide-header'>
+        <span class='metrics-guide-icon'>📚</span>
+        <div>
+            <p class='metrics-guide-title'>Understanding These Metrics</p>
+            <p class='metrics-guide-subtitle'>Learn what each parameter means and why it matters for drug discovery</p>
+        </div>
+    </div>
+    <span class='metrics-guide-badge'>👇 Click below to expand the guide</span>
+</div>
+""", unsafe_allow_html=True)
+
+with st.expander("🔍 **Expand Full Metrics Guide** - Accuracy, ROC-AUC, Lipinski Rules, BBB & More", expanded=False):
     st.html("""<div style='padding: 10px 0;'>
         <h4 style='color: #6366f1; margin-bottom: 15px;'>🎯 Model Performance Metrics</h4>
         <div style='display: grid; gap: 12px;'>
@@ -1197,41 +1259,40 @@ if page == "🔬 Single Prediction":
             st.markdown(f'<div class="toxic-box">&#x2620;&#xFE0F; <b>TOXIC COMPOUND DETECTED</b><br><small>{ASSAY_INFO["name"]} positive response</small></div>', 
                        unsafe_allow_html=True)
             
-            with st.expander("🔍 What does this mean?"):
-                st.markdown("""
-                **Positive SR-ARE Response Detected**
-                
-                This compound is predicted to activate cellular stress response pathways, which may indicate:
-                
-                - ⚠️ Potential oxidative stress induction
-                - ⚠️ Risk of cellular damage
-                - ⚠️ May require further safety evaluation
-                
-                **Confidence Level:** {:.1f}%
-                
-                **Recommendation:** This prediction suggests caution. Consider:
-                - Further *in vitro* testing
-                - Structure modification to reduce toxicity
-                - Alternative compounds if available
-                """.format(confidence * 100))
+            # What does this mean - always visible
+            st.markdown("""
+            <div style='background: #fff5f5; border-left: 4px solid #ff6b6b; padding: 15px; border-radius: 8px; margin: 15px 0;'>
+                <h4 style='color: #c53030; margin-top: 0;'>🔍 What does this mean?</h4>
+                <p style='margin-bottom: 10px;'><strong>Positive SR-ARE Response Detected</strong></p>
+                <p style='margin-bottom: 10px;'>This compound is predicted to activate cellular stress response pathways, which may indicate:</p>
+                <ul style='margin: 10px 0;'>
+                    <li>⚠️ Potential oxidative stress induction</li>
+                    <li>⚠️ Risk of cellular damage</li>
+                    <li>⚠️ May require further safety evaluation</li>
+                </ul>
+                <p style='margin-bottom: 10px;'><strong>Confidence Level:</strong> {:.1f}%</p>
+                <p style='margin-bottom: 0;'><strong>Recommendation:</strong> This prediction suggests caution. Consider further <em>in vitro</em> testing, structure modification to reduce toxicity, or alternative compounds if available.</p>
+            </div>
+            """.format(confidence * 100), unsafe_allow_html=True)
         else:
             st.markdown(f'<div class="safe-box">&#x2705; <b>SAFE COMPOUND</b><br><small>No {ASSAY_INFO["name"]} response detected</small></div>', 
                        unsafe_allow_html=True)
             
-            with st.expander("✅ What does this mean?"):
-                st.markdown("""
-                **Negative SR-ARE Response Detected**
-                
-                This compound is predicted to NOT activate stress response pathways, suggesting:
-                
-                - ✅ Lower risk of oxidative stress
-                - ✅ Potentially safer toxicity profile
-                - ✅ Good candidate for further development
-                
-                **Confidence Level:** {:.1f}%
-                
-                **Note:** This prediction indicates lower risk in this specific assay. Complete safety assessment requires multiple toxicity tests.
-                """.format(confidence * 100))
+            # What does this mean - always visible
+            st.markdown("""
+            <div style='background: #f0fff4; border-left: 4px solid #48bb78; padding: 15px; border-radius: 8px; margin: 15px 0;'>
+                <h4 style='color: #276749; margin-top: 0;'>✅ What does this mean?</h4>
+                <p style='margin-bottom: 10px;'><strong>Negative SR-ARE Response Detected</strong></p>
+                <p style='margin-bottom: 10px;'>This compound is predicted to NOT activate stress response pathways, suggesting:</p>
+                <ul style='margin: 10px 0;'>
+                    <li>✅ Lower risk of oxidative stress</li>
+                    <li>✅ Potentially safer toxicity profile</li>
+                    <li>✅ Good candidate for further development</li>
+                </ul>
+                <p style='margin-bottom: 10px;'><strong>Confidence Level:</strong> {:.1f}%</p>
+                <p style='margin-bottom: 0;'><strong>Note:</strong> This prediction indicates lower risk in this specific assay. Complete safety assessment requires multiple toxicity tests.</p>
+            </div>
+            """.format(confidence * 100), unsafe_allow_html=True)
         
         # ============================================================
         # BLOOD-BRAIN BARRIER PREDICTION SECTION
@@ -1270,20 +1331,19 @@ if page == "🔬 Single Prediction":
                 </div>
                 """, unsafe_allow_html=True)
                 
-                with st.expander("🧠 What does BBB Permeability mean?"):
-                    st.markdown("""
-                    **Crosses Blood-Brain Barrier**
-                    
-                    This compound is predicted to penetrate the blood-brain barrier:
-                    
-                    - 🧠 **For CNS drugs**: ✅ Good - can reach brain targets
-                    - 💊 **For non-CNS drugs**: ⚠️ Caution - may cause neurological side effects
-                    
-                    **Clinical Implications:**
-                    - Essential for drugs treating neurological conditions (Alzheimer's, Parkinson's)
-                    - May indicate risk of CNS side effects for peripheral drugs
-                    - Consider if brain penetration is desired for your application
-                    """)
+                # What does BBB Permeability mean - always visible
+                st.markdown("""
+                <div style='background: #f0f4ff; border-left: 4px solid #667eea; padding: 15px; border-radius: 8px; margin: 15px 0;'>
+                    <h4 style='color: #4c51bf; margin-top: 0;'>🧠 What does BBB Permeability mean?</h4>
+                    <p style='margin-bottom: 10px;'><strong>Crosses Blood-Brain Barrier</strong></p>
+                    <p style='margin-bottom: 10px;'>This compound is predicted to penetrate the blood-brain barrier:</p>
+                    <ul style='margin: 10px 0;'>
+                        <li>🧠 <strong>For CNS drugs:</strong> ✅ Good - can reach brain targets</li>
+                        <li>💊 <strong>For non-CNS drugs:</strong> ⚠️ Caution - may cause neurological side effects</li>
+                    </ul>
+                    <p style='margin-bottom: 0;'><strong>Clinical Implications:</strong> Essential for drugs treating neurological conditions (Alzheimer's, Parkinson's). May indicate risk of CNS side effects for peripheral drugs.</p>
+                </div>
+                """, unsafe_allow_html=True)
             else:
                 st.markdown("""
                 <div style='background: linear-gradient(135deg, #868e96 0%, #495057 100%); 
@@ -1295,20 +1355,19 @@ if page == "🔬 Single Prediction":
                 </div>
                 """, unsafe_allow_html=True)
                 
-                with st.expander("🛡️ What does BBB Impermeability mean?"):
-                    st.markdown("""
-                    **Does NOT Cross Blood-Brain Barrier**
-                    
-                    This compound is predicted to be blocked by the blood-brain barrier:
-                    
-                    - 💊 **For non-CNS drugs**: ✅ Good - lower risk of neurological side effects
-                    - 🧠 **For CNS drugs**: ❌ Issue - won't reach brain targets
-                    
-                    **Clinical Implications:**
-                    - Safer for peripheral-acting drugs (reduced CNS effects)
-                    - Not suitable for neurological conditions requiring brain penetration
-                    - May need structural modification if CNS activity desired
-                    """)
+                # What does BBB Impermeability mean - always visible
+                st.markdown("""
+                <div style='background: #f7f7f8; border-left: 4px solid #868e96; padding: 15px; border-radius: 8px; margin: 15px 0;'>
+                    <h4 style='color: #495057; margin-top: 0;'>🛡️ What does BBB Impermeability mean?</h4>
+                    <p style='margin-bottom: 10px;'><strong>Does NOT Cross Blood-Brain Barrier</strong></p>
+                    <p style='margin-bottom: 10px;'>This compound is predicted to be blocked by the blood-brain barrier:</p>
+                    <ul style='margin: 10px 0;'>
+                        <li>💊 <strong>For non-CNS drugs:</strong> ✅ Good - lower risk of neurological side effects</li>
+                        <li>🧠 <strong>For CNS drugs:</strong> ❌ Issue - won't reach brain targets</li>
+                    </ul>
+                    <p style='margin-bottom: 0;'><strong>Clinical Implications:</strong> Safer for peripheral-acting drugs (reduced CNS effects). Not suitable for neurological conditions requiring brain penetration.</p>
+                </div>
+                """, unsafe_allow_html=True)
         else:
             st.warning("⚠️ BBB model not available. Refresh the page to train it.")
         
@@ -1327,58 +1386,58 @@ if page == "🔬 Single Prediction":
         with st.spinner("🔬 Generating explainability heatmap... This may take a few seconds"):
             heatmap_img, max_weight = explain_molecule(mol, model)
         
-        col1, col2 = st.columns([1.8, 1.2])
+        col1, col2 = st.columns([1.2, 1])
         
         with col1:
             st.markdown("""
-            <div class='feature-card'>
-                <h4 style='color: #6366f1; margin-top: 0;'>🗺️ Attribution Heatmap</h4>
-                <p style='color: #666; font-size: 0.9rem; margin-bottom: 1rem;'>
-                    Color intensity shows atom contribution strength. Hover to examine specific regions.
+            <div class='feature-card' style='padding: 15px;'>
+                <h4 style='color: #6366f1; margin-top: 0; font-size: 1.1rem;'>🗺️ Attribution Heatmap</h4>
+                <p style='color: #666; font-size: 0.85rem; margin-bottom: 0.8rem;'>
+                    Color intensity shows atom contribution strength
                 </p>
             """, unsafe_allow_html=True)
-            st.image(heatmap_img, width='stretch')
+            st.image(heatmap_img, use_container_width=True)
             st.markdown("</div>", unsafe_allow_html=True)
         
         with col2:
-            # Enhanced Interpretation guide
-            st.markdown("### 🔍 Interpretation Guide")
+            # Compact Interpretation guide
+            st.markdown("#### 🔍 Interpretation Guide")
             
-            # Color legends using st.html for better rendering
+            # Color legends using st.html - more compact
             st.html("""
-            <div style='margin: 15px 0;'>
-                <div style='display: flex; align-items: center; margin: 12px 0;'>
-                    <div style='width: 50px; height: 50px; background: linear-gradient(135deg, #ff6b6b, #ee5a6f); border-radius: 10px; margin-right: 15px; box-shadow: 0 2px 8px rgba(255,107,107,0.3);'></div>
+            <div style='margin: 10px 0;'>
+                <div style='display: flex; align-items: center; margin: 8px 0;'>
+                    <div style='width: 35px; height: 35px; background: linear-gradient(135deg, #ff6b6b, #ee5a6f); border-radius: 8px; margin-right: 12px; box-shadow: 0 2px 6px rgba(255,107,107,0.3);'></div>
                     <div>
-                        <strong style='color: #ff6b6b; font-size: 1rem;'>Red/Orange</strong><br>
-                        <span style='color: #666; font-size: 0.85rem;'>Increases toxicity risk</span>
+                        <strong style='color: #ff6b6b; font-size: 0.9rem;'>Red/Orange</strong>
+                        <span style='color: #666; font-size: 0.8rem;'> — Increases toxicity</span>
                     </div>
                 </div>
                 
-                <div style='display: flex; align-items: center; margin: 12px 0;'>
-                    <div style='width: 50px; height: 50px; background: linear-gradient(135deg, #51cf66, #37b24d); border-radius: 10px; margin-right: 15px; box-shadow: 0 2px 8px rgba(55,178,77,0.3);'></div>
+                <div style='display: flex; align-items: center; margin: 8px 0;'>
+                    <div style='width: 35px; height: 35px; background: linear-gradient(135deg, #51cf66, #37b24d); border-radius: 8px; margin-right: 12px; box-shadow: 0 2px 6px rgba(55,178,77,0.3);'></div>
                     <div>
-                        <strong style='color: #51cf66; font-size: 1rem;'>Green/Blue</strong><br>
-                        <span style='color: #666; font-size: 0.85rem;'>Decreases toxicity risk</span>
+                        <strong style='color: #51cf66; font-size: 0.9rem;'>Green/Blue</strong>
+                        <span style='color: #666; font-size: 0.8rem;'> — Reduces toxicity</span>
                     </div>
                 </div>
                 
-                <div style='display: flex; align-items: center; margin: 12px 0;'>
-                    <div style='width: 50px; height: 50px; background: #ffffff; border: 2px solid #ccc; border-radius: 10px; margin-right: 15px;'></div>
+                <div style='display: flex; align-items: center; margin: 8px 0;'>
+                    <div style='width: 35px; height: 35px; background: #f5f5f5; border: 2px solid #ddd; border-radius: 8px; margin-right: 12px;'></div>
                     <div>
-                        <strong style='color: #666; font-size: 1rem;'>White/Gray</strong><br>
-                        <span style='color: #666; font-size: 0.85rem;'>Neutral contribution</span>
+                        <strong style='color: #888; font-size: 0.9rem;'>White/Gray</strong>
+                        <span style='color: #666; font-size: 0.8rem;'> — Neutral</span>
                     </div>
                 </div>
             </div>
             """)
             
-            # Attribution statistics
-            st.markdown("### 📊 Attribution Statistics")
+            # Attribution statistics - compact
+            st.markdown("#### 📊 Attribution Stats")
             
             col_a, col_b = st.columns(2)
             with col_a:
-                st.metric("Max Weight", f"{max_weight:.4f}", help="Highest atom contribution")
+                st.metric("Max Weight", f"{max_weight:.3f}", help="Highest atom contribution")
             with col_b:
                 interpretation = "Strong" if max_weight > 0.1 else "Moderate" if max_weight > 0.05 else "Weak"
                 st.metric("Strength", interpretation)
@@ -1398,36 +1457,26 @@ if page == "🔬 Single Prediction":
                 use_container_width=True
             )
         
-        # Add actionable insights
-        st.markdown("### 💡 Actionable Insights")
-        
+        # Actionable insights - always visible
+        st.markdown("#### 💡 Actionable Insights")
         insight_cols = st.columns(2)
         
         with insight_cols[0]:
             st.markdown("""
-            <div class='feature-card'>
-                <h4 style='color: #6366f1;'>🎯 For Medicinal Chemists</h4>
-                <ul style='line-height: 1.8;'>
-                    <li><strong>Identify toxic moieties:</strong> Red regions show problematic substructures</li>
-                    <li><strong>Propose modifications:</strong> Replace or modify red atoms</li>
-                    <li><strong>Preserve activity:</strong> Keep green regions if they're important for potency</li>
-                    <li><strong>Test alternatives:</strong> Try different scaffolds for red regions</li>
-                </ul>
-            </div>
-            """, unsafe_allow_html=True)
+            **🎯 For Medicinal Chemists**
+            - **Red regions** → Problematic substructures to modify
+            - **Green regions** → Keep if important for potency
+            - **Try alternatives** → Different scaffolds for red areas
+            """)
         
         with insight_cols[1]:
             st.markdown("""
-            <div class='feature-card'>
-                <h4 style='color: #6366f1;'>📋 Next Steps</h4>
-                <ul style='line-height: 1.8;'>
-                    <li><strong>Document findings:</strong> Download heatmap for reports</li>
-                    <li><strong>Compare analogs:</strong> Test structural variants</li>
-                    <li><strong>Validate experimentally:</strong> Confirm with in vitro assays</li>
-                    <li><strong>SAR analysis:</strong> Build structure-activity-toxicity relationships</li>
-                </ul>
-            </div>
-            """, unsafe_allow_html=True)
+            **📋 Next Steps**
+            - Download heatmap for reports
+            - Test structural variants
+            - Validate with in vitro assays
+            - Build SAR relationships
+            """)
 
 elif page == "📊 Batch Analysis":
     st.markdown("<h2 class='section-header'>📊 Batch Molecule Analysis</h2>", unsafe_allow_html=True)
