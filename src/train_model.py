@@ -130,8 +130,8 @@ def save_model(model):
     print(f"\n💾 Model saved to: {MODEL_PATH}")
 
 
-def main():
-    """Main training pipeline."""
+def train_and_save_model():
+    """Complete training pipeline - callable from app.py"""
     print("=" * 70)
     print("🧪 ToxPred-Explainable Model Training")
     print("=" * 70)
@@ -154,6 +154,13 @@ def main():
     print("\n" + "=" * 70)
     print("🎉 Training Complete!")
     print("=" * 70)
+    return model
+
+
+def main():
+    """Main training pipeline."""
+    train_and_save_model()
+    
     print("\n🚀 Next steps:")
     print("   1. Run the Streamlit app: streamlit run app.py")
     print("   2. Test explainability on molecules")

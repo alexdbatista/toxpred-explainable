@@ -228,11 +228,23 @@ st.markdown("""
 # Load model
 @st.cache_resource
 def load_model():
+    """Load model, training it first if it doesn't exist"""
+    if not os.path.exists(MODEL_PATH):
+        st.warning("⏳ Model not found. Training now... This will take ~30 seconds.")
+        try:
+            # Import and run training
+            from src.train_model import train_and_save_model
+            train_and_save_model()
+            st.success("✅ Model trained successfully!")
+        except Exception as e:
+            st.error(f"❌ Error training model: {str(e)}")
+            return None
+    
     try:
         with open(MODEL_PATH, 'rb') as f:
             return pickle.load(f)
-    except FileNotFoundError:
-        st.error("Model not found! Please run train_model.py first.")
+    except Exception as e:
+        st.error(f"❌ Error loading model: {str(e)}")
         return None
 
 model = load_model()
