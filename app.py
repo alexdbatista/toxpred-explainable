@@ -292,6 +292,90 @@ st.markdown("""
         border-radius: 8px;
     }
     
+    /* Prominent Search Hero Section */
+    .search-hero {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+        padding: 2.5rem 2rem;
+        border-radius: 24px;
+        margin-bottom: 2rem;
+        box-shadow: 0 20px 60px rgba(99, 102, 241, 0.4);
+        border: 2px solid rgba(255,255,255,0.2);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .search-hero::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+        animation: searchPulse 4s ease-in-out infinite;
+    }
+    
+    @keyframes searchPulse {
+        0%, 100% { transform: scale(1); opacity: 0.5; }
+        50% { transform: scale(1.1); opacity: 0.3; }
+    }
+    
+    .search-hero-title {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: white;
+        text-align: center;
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+    }
+    
+    .search-hero-subtitle {
+        font-size: 1rem;
+        color: rgba(255,255,255,0.9);
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .search-input-wrapper {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+        position: relative;
+        z-index: 1;
+    }
+    
+    .search-hero .stTextInput > div > div > input {
+        font-size: 1.2rem !important;
+        padding: 1rem 1.2rem !important;
+        border: 3px solid #e2e8f0 !important;
+        border-radius: 12px !important;
+        background: #fafaff !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .search-hero .stTextInput > div > div > input:focus {
+        border-color: #6366f1 !important;
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2) !important;
+        background: white !important;
+    }
+    
+    .search-hero .stButton > button {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+        border: none !important;
+        padding: 1rem 2rem !important;
+        font-size: 1.1rem !important;
+        font-weight: 700 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4) !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .search-hero .stButton > button:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 12px 35px rgba(16, 185, 129, 0.5) !important;
+    }
+    
     .stats-box {
         background: rgba(255,255,255,0.98);
         padding: 1.2rem;
@@ -686,32 +770,25 @@ st.markdown("""
 
 # Page routing with updated names
 if page == "🔬 Single Prediction":
-    st.markdown("<h2 class='section-header'>🔬 Single Molecule Analysis</h2>", unsafe_allow_html=True)
-    
-    # Add info banner
+    # ===============================
+    # PROMINENT SEARCH HERO SECTION
+    # ===============================
     st.markdown("""
-    <div style='background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%); padding: 1rem 1.5rem; border-radius: 12px; border-left: 4px solid #6366f1; margin-bottom: 1.5rem;'>
-        <p style='margin: 0; color: #333; font-size: 0.95rem;'>
-            <strong>🎯 How it works:</strong> Enter a molecule by name or SMILES structure → Get instant toxicity prediction → 
-            View atom-level attribution showing which parts contribute to toxicity.
-        </p>
+    <div class='search-hero'>
+        <div class='search-hero-title'>🔬 Analyze Your Molecule</div>
+        <div class='search-hero-subtitle'>Enter a chemical name or SMILES structure for instant toxicity prediction with atom-level explanations</div>
     </div>
     """, unsafe_allow_html=True)
     
-    col1, col2 = st.columns([1.2, 1])
+    # Search input in a prominent centered container
+    search_col1, search_col2, search_col3 = st.columns([0.5, 3, 0.5])
     
-    with col1:
-        st.markdown("""
-        <div class='feature-card'>
-            <h3 style='color: #6366f1; margin-top: 0;'>📝 Input Molecule</h3>
-            <p style='color: #666; font-size: 0.9rem; margin-bottom: 1rem;'>
-                Choose your input method and enter a molecule to analyze its toxicity profile.
-            </p>
-        """, unsafe_allow_html=True)
+    with search_col2:
+        st.markdown("<div class='search-input-wrapper'>", unsafe_allow_html=True)
         
-        # Input method selection with better styling
+        # Input method selection - more prominent
         input_method = st.radio(
-            "Search by:",
+            "🔍 Search by:",
             ["🔤 Chemical Name", "🧬 SMILES String"],
             horizontal=True,
             help="Choose to search by common name (e.g., 'aspirin') or SMILES notation for precise structure"
@@ -889,12 +966,22 @@ if page == "🔬 Single Prediction":
                         'timestamp': pd.Timestamp.now().strftime('%Y-%m-%d %H:%M')
                     })
                     st.session_state.molecule_history = st.session_state.molecule_history[-10:]
+        
+        st.markdown("</div>", unsafe_allow_html=True)  # Close search-input-wrapper
     
-    with col2:
-        if 'analyzed' in st.session_state and st.session_state.analyzed:
-            smiles = st.session_state.smiles
-            mol = Chem.MolFromSmiles(smiles)
-            
+    # ===============================
+    # RESULTS SECTION (after search)
+    # ===============================
+    if 'analyzed' in st.session_state and st.session_state.analyzed:
+        smiles = st.session_state.smiles
+        mol = Chem.MolFromSmiles(smiles)
+        
+        # Results in a nice two-column layout
+        st.markdown("<h2 class='section-header'>📊 Analysis Results</h2>", unsafe_allow_html=True)
+        
+        result_col1, result_col2 = st.columns([1, 1.2])
+        
+        with result_col1:
             st.markdown("""
             <div class='feature-card'>
                 <h3 style='color: #6366f1; margin-top: 0;'>&#x1F52C; Molecular Structure</h3>
@@ -912,7 +999,8 @@ if page == "🔬 Single Prediction":
             img = Image.open(io.BytesIO(img_data))
             st.image(img, width=350)
             st.markdown("</div>", unsafe_allow_html=True)
-            
+        
+        with result_col2:
             # Lipinski's Rule
             lipinski = calculate_lipinski(mol)
             st.markdown("""
@@ -958,7 +1046,7 @@ if page == "🔬 Single Prediction":
                     """, unsafe_allow_html=True)
             else:
                 # For SMILES input, offer substructure search
-                smiles_encoded = urllib.parse.quote(smiles_input)
+                smiles_encoded = urllib.parse.quote(smiles)
                 pubchem_smiles_url = f"https://pubchem.ncbi.nlm.nih.gov/#query={smiles_encoded}"
                 st.markdown(f"""
                 <div style='background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); padding: 12px 15px; border-radius: 10px; margin-top: 15px; border-left: 4px solid #ef6c00;'>
