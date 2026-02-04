@@ -5,13 +5,13 @@
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://toxpred-explainable.streamlit.app)
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![Streamlit](https://img.shields.io/badge/streamlit-1.41+-FF4B4B.svg)](https://streamlit.io)
-[![RDKit](https://img.shields.io/badge/rdkit-2025.9+-brightgreen.svg)](https://www.rdkit.org/)
+[![RDKit](https://img.shields.io/badge/rdkit-2023.9+-brightgreen.svg)](https://www.rdkit.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/alexdbatista/toxpred-explainable)
+[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/alexdbatista/toxpred-explainable)
 
 A production-ready web application for molecular toxicity prediction with atom-level explainability. Search by chemical name or SMILES, get instant predictions, and visualize which atoms contribute to toxicity.
 
-**🎥 [Live Demo](https://toxpred-explainable.streamlit.app)** | **📊 [Model Card](docs/model_card.md)** | **📖 [Technical Report](docs/technical_report.md)**
+**🎥 [Live Demo](https://toxpred-explainable.streamlit.app)** | **📖 [Quick Start](docs/QUICKSTART.md)**
 
 ---
 

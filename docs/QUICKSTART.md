@@ -4,7 +4,7 @@
 
 ```bash
 # 1. Clone repo
-git clone https://github.com/yourusername/toxpred-explainable.git
+git clone https://github.com/alexdbatista/toxpred-explainable.git
 cd toxpred-explainable
 
 # 2. Create environment

@@ -4,13 +4,15 @@ This folder contains Jupyter notebooks used during development and experimentati
 
 ## Notebooks
 
-### `explainability_engine_prototype.ipynb`
+### `toxpred_explainability_prototype.ipynb`
 - **Purpose**: Development prototype for explainability engine
-- **Phases**:
-  - Phase 1: Dummy data with 6 molecules
-  - Phase 2: Real Tox21 data with 5,832 molecules
-  - Phase 3: Model training and evaluation
-- **Key Results**: 99.81% training accuracy, explainability heatmaps validated
+- **Contents**:
+  - Morgan fingerprint generation
+  - Atom-level explainability algorithm
+  - Heatmap visualization
+  - Lipinski's Rule of Five
+  - BBB permeability prediction
+- **Key Results**: Demonstrates core ML and visualization techniques
 - **Status**: Complete - ready for reference
 
 ## Usage
