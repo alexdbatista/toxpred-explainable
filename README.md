@@ -2,15 +2,16 @@
 
 **Explainable AI for Molecular Toxicity Prediction**
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://your-app-url-here.streamlit.app)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://toxpred-explainable.streamlit.app)
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![Streamlit](https://img.shields.io/badge/streamlit-1.41+-FF4B4B.svg)](https://streamlit.io)
-[![RDKit](https://img.shields.io/badge/rdkit-2023.9+-brightgreen.svg)](https://www.rdkit.org/)
+[![RDKit](https://img.shields.io/badge/rdkit-2025.9+-brightgreen.svg)](https://www.rdkit.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/alexdbatista/toxpred-explainable)
 
 A production-ready web application for molecular toxicity prediction with atom-level explainability. Search by chemical name or SMILES, get instant predictions, and visualize which atoms contribute to toxicity.
 
-**🎥 [Live Demo](https://your-app-url-here.streamlit.app)** | **📊 [Model Card](docs/model_card.md)** | **📖 [Technical Report](docs/technical_report.md)**
+**🎥 [Live Demo](https://toxpred-explainable.streamlit.app)** | **📊 [Model Card](docs/model_card.md)** | **📖 [Technical Report](docs/technical_report.md)**
 
 ---
 
@@ -18,24 +19,26 @@ A production-ready web application for molecular toxicity prediction with atom-l
 
 - 🔍 **Dual Search**: Chemical name (PubChem API) OR SMILES structure input
 - 🎯 **Instant Predictions**: Random Forest classifier with 86.6% test accuracy
+- 🧠 **BBB Prediction**: Blood-Brain Barrier permeability assessment
 - 🗺️ **Explainability Heatmaps**: Atom-level attribution showing toxic substructures
 - 📊 **Drug-Likeness**: Lipinski's Rule of Five validation (MW, LogP, HBD, HBA)
 - 📁 **Batch Processing**: Upload CSV files for bulk predictions
 - 💾 **Export Ready**: Download heatmaps and predictions for reports
 - 📚 **Educational Content**: Comprehensive explanations of SR-ARE assay and predictions
+- 🔗 **PubChem Integration**: Direct links to compound databases
 
 ---
 
 ## 🚀 Quick Start
 
 ### Try the Live App
-Visit **[your-app-url-here.streamlit.app](https://your-app-url-here.streamlit.app)** to try it instantly!
+Visit **[toxpred-explainable.streamlit.app](https://toxpred-explainable.streamlit.app)** to try it instantly!
 
 ### Run Locally
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/yourusername/toxpred-explainable.git
+git clone https://github.com/alexdbatista/toxpred-explainable.git
 cd toxpred-explainable
 
 # 2. Create conda environment (RDKit requires conda)
@@ -57,17 +60,19 @@ The app will open at `http://localhost:8501`
 ## 📊 Model Performance
 
 **Dataset**: EPA/FDA Tox21 Challenge - SR-ARE Assay (Stress Response)
-- **Training**: 4,665 molecules (16.2% toxic, 83.8% safe)
-- **Testing**: 1,167 molecules
+- **Total Valid**: 7,831 molecules
+- **Training**: 5,832 molecules (80%)
+- **Testing**: 1,999 molecules (20%)
+- **Class Distribution**: 16.2% toxic, 83.8% safe
 
 **Metrics**:
 | Metric | Training | Testing |
 |--------|----------|---------|
-| Accuracy | 99.85% | 86.63% |
-| Precision | 99.86% | 55.68% |
-| Recall | 99.07% | 42.86% |
-| F1-Score | 99.46% | 48.44% |
-| ROC-AUC | 99.99% | 0.822 |
+| Accuracy | 99.85% | 86.6% |
+| Precision (Toxic) | - | 78% |
+| Recall (Toxic) | - | 78% |
+| F1-Score | - | 0.78 |
+| ROC-AUC | - | 0.822 |
 
 **Architecture**: Random Forest (100 trees, class-balanced)  
 **Features**: Morgan Fingerprints (2048-bit ECFP4, radius=2)
@@ -239,7 +244,7 @@ RandomForestClassifier(
 - ✋ **Single assay**: Only predicts SR-ARE toxicity (oxidative stress)
 - ✋ **In vitro only**: Cell-based assay doesn't capture full organism effects
 - ✋ **Limited chemical space**: Trained on Tox21 library (may not generalize to all drugs)
-- ✋ **Imbalanced performance**: 55.7% precision, 42.9% recall on toxic class
+- ✋ **Class imbalance**: Model is conservative with 98% specificity but 32% sensitivity
 
 ### When NOT to use
 - ❌ Drug approval decisions
@@ -264,7 +269,7 @@ RandomForestClassifier(
 git init
 git add .
 git commit -m "Initial commit: ToxPred-Explainable"
-git remote add origin https://github.com/yourusername/toxpred-explainable.git
+git remote add origin https://github.com/alexdbatista/toxpred-explainable.git
 git push -u origin main
 ```
 
@@ -294,49 +299,6 @@ Contributions welcome! Areas for improvement:
 - [ ] Attention-based explainability (GNNExplainer)
 - [ ] Active learning for data-efficient retraining
 - [ ] API endpoint for programmatic access
-
----
-
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) file
-
----
-
-## 📧 Contact
-
-**Author**: Alex Domingues Batista  
-**Portfolio**: [github.com/yourusername](https://github.com/yourusername)  
-**Email**: your.email@example.com
-
----
-
-## 🙏 Acknowledgments
-
-- **Tox21 Consortium**: EPA, NIH, FDA for open dataset
-- **RDKit Community**: Cheminformatics tools
-- **Streamlit Team**: Web framework
-- **PubChem**: Chemical structure database
-
----
-
-## 📚 References
-
-1. Tox21 Challenge: https://tripod.nih.gov/tox21/challenge/
-2. Morgan Fingerprints: Rogers & Hahn (2010) J. Chem. Inf. Model.
-3. Explainable AI in Drug Discovery: Jiménez-Luna et al. (2020) Nat. Mach. Intell.
-4. Lipinski's Rule of Five: Lipinski et al. (1997) Adv. Drug Deliv. Rev.
-
----
-
-**⭐ If you found this project helpful, please give it a star!**
-│
-├── notebooks/
-│   └── explainability_engine_prototype.ipynb  # Development notebook
-│
-└── docs/
-    └── demo_screenshots/      # App screenshots for README
-```
 
 ---
 
@@ -424,15 +386,6 @@ This project demonstrates:
 
 ---
 
-## 🤝 Contributing
-
-This is a portfolio project, but suggestions welcome! Feel free to:
-- Open issues for bugs/improvements
-- Submit PRs for enhancements
-- Use as a template for your own projects
-
----
-
 ## 📜 License
 
 MIT License - feel free to use for learning/portfolio purposes.
@@ -442,9 +395,8 @@ MIT License - feel free to use for learning/portfolio purposes.
 ## 👤 Author
 
 **Alex Domingues Batista**
-- LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
-- Portfolio: [Your Portfolio Site](https://yourportfolio.com)
-- GitHub: [@yourusername](https://github.com/yourusername)
+- LinkedIn: [alexdbatista](https://linkedin.com/in/alexdbatista)
+- GitHub: [@alexdbatista](https://github.com/alexdbatista)
 
 ---
 

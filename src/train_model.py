@@ -9,7 +9,7 @@ import urllib.request
 
 import numpy as np
 import pandas as pd
-from config import ASSAY_INFO, DATA_PATH, FP_PARAMS, MODEL_PARAMS, MODEL_PATH
+from config import ASSAY_INFO, DATA_PATH, FP_PARAMS, MODEL_PARAMS, MODEL_PATH, BBB_MODEL_PATH
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from sklearn.ensemble import RandomForestClassifier
@@ -154,6 +154,80 @@ def train_and_save_model():
     print("\n" + "=" * 70)
     print("🎉 Training Complete!")
     print("=" * 70)
+    return model
+
+
+def download_bbb_data():
+    """Download BBBP dataset if not present."""
+    bbb_data_path = os.path.join(os.path.dirname(DATA_PATH), 'bbbp_data.csv')
+    if not os.path.exists(bbb_data_path):
+        print("📥 Downloading BBBP dataset...")
+        os.makedirs(os.path.dirname(bbb_data_path), exist_ok=True)
+        
+        url = "https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/BBBP.csv"
+        urllib.request.urlretrieve(url, bbb_data_path)
+        print("✅ BBBP dataset downloaded!")
+    else:
+        print("✅ BBBP dataset already exists!")
+    return bbb_data_path
+
+
+def train_and_save_bbb_model():
+    """Train and save BBB permeability model."""
+    print("=" * 70)
+    print("🧠 Training Blood-Brain Barrier Permeability Model")
+    print("=" * 70)
+    
+    # Download data
+    bbb_data_path = download_bbb_data()
+    
+    # Load and clean data
+    print("\n🔄 Loading BBBP dataset...")
+    bbb_df = pd.read_csv(bbb_data_path)
+    print(f"   - Loaded {len(bbb_df)} molecules")
+    
+    # Clean data - keep only valid SMILES
+    bbb_df = bbb_df.dropna(subset=['smiles', 'p_np']).copy()
+    print(f"   - Valid samples: {len(bbb_df)}")
+    print(f"   - BBB+ (permeable): {int(bbb_df['p_np'].sum())}")
+    print(f"   - BBB- (non-permeable): {int(len(bbb_df) - bbb_df['p_np'].sum())}")
+    
+    # Featurize
+    print("\n🔄 Generating fingerprints...")
+    X_smiles = bbb_df['smiles'].values
+    y = bbb_df['p_np'].values
+    
+    mols = [Chem.MolFromSmiles(s) for s in X_smiles]
+    X = np.array([get_fingerprint_arr(m) for m in mols])
+    
+    print(f"✅ Featurization complete! Shape: {X.shape}")
+    
+    # Train
+    print("\n🚀 Training Random Forest model...")
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42, stratify=y
+    )
+    
+    model = RandomForestClassifier(**MODEL_PARAMS)
+    model.fit(X_train, y_train)
+    
+    # Evaluate
+    test_acc = accuracy_score(y_test, model.predict(X_test))
+    y_pred_proba = model.predict_proba(X_test)[:, 1]
+    test_roc_auc = roc_auc_score(y_test, y_pred_proba)
+    
+    print(f"\n✅ BBB Model Training Complete!")
+    print(f"   - Test Accuracy: {test_acc:.2%}")
+    print(f"   - Test ROC-AUC: {test_roc_auc:.3f}")
+    
+    # Save
+    os.makedirs(os.path.dirname(BBB_MODEL_PATH), exist_ok=True)
+    with open(BBB_MODEL_PATH, 'wb') as f:
+        pickle.dump(model, f)
+    
+    print(f"\n💾 BBB Model saved to: {BBB_MODEL_PATH}")
+    print("=" * 70)
+    
     return model
 
 

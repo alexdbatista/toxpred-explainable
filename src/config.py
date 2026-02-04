@@ -45,3 +45,16 @@ LIPINSKI_THRESHOLDS = {
     'HBD': 5,
     'HBA': 10
 }
+
+# Version information
+APP_VERSION = "1.0.0"
+MODEL_VERSION = "1.0.0"
+RELEASE_DATE = "2026-02-04"
+
+# Blood-Brain Barrier Model (placeholder for future implementation)
+BBB_MODEL_PATH = os.path.join(BASE_DIR, 'models', 'bbb_model.pkl')
+BBB_INFO = {
+    'name': 'Blood-Brain Barrier Permeability',
+    'description': 'Predicts ability of molecules to cross the blood-brain barrier',
+    'target_col': 'BBB'
+}
