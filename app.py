@@ -502,12 +502,9 @@ st.markdown("""
 def load_model():
     """Load model, training it first if it doesn't exist"""
     if not os.path.exists(MODEL_PATH):
-        st.info("🚀 First-time setup: Building the prediction model... This takes about 30 seconds.")
         try:
-            # Import and run training
             from src.train_model import train_and_save_model
             train_and_save_model()
-            st.success("✅ Model ready! You're all set to make predictions.")
         except Exception as e:
             st.error(f"❌ Error during model setup: {str(e)}")
             return None
@@ -526,16 +523,13 @@ model = load_model()
 def load_bbb_model():
     """Load BBB model, training it first if it doesn't exist"""
     if not os.path.exists(BBB_MODEL_PATH):
-        st.info("🧠 First-time setup: Building BBB prediction model... This takes about 20 seconds.")
         try:
-            # Import using sys.path approach for consistency
             import importlib.util
             spec = importlib.util.spec_from_file_location("train_model", 
                 os.path.join(os.path.dirname(__file__), 'src', 'train_model.py'))
             train_module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(train_module)
             train_module.train_and_save_bbb_model()
-            st.success("✅ BBB Model ready!")
         except Exception as e:
             st.error(f"❌ Error during BBB model setup: {str(e)}")
             return None
@@ -773,6 +767,98 @@ st.markdown("""
     </div>
 </div>
 """, unsafe_allow_html=True)
+
+# Understanding Metrics - Expandable Educational Section
+with st.expander("📚 **Understanding These Metrics** - Click to learn what each parameter means", expanded=False):
+    st.html("""<div style='padding: 10px 0;'>
+        <h4 style='color: #6366f1; margin-bottom: 15px;'>🎯 Model Performance Metrics</h4>
+        <div style='display: grid; gap: 12px;'>
+            <div style='background: #f0fdf4; padding: 15px; border-radius: 10px; border-left: 4px solid #22c55e;'>
+                <strong style='color: #166534;'>Test Accuracy (86.6%)</strong>
+                <p style='margin: 5px 0 0 0; color: #4b5563; font-size: 0.9rem;'>
+                    The percentage of correct predictions on unseen data. Our model correctly classifies ~87 out of 100 molecules.
+                    This is a balanced measure of overall performance.
+                </p>
+            </div>
+            <div style='background: #eff6ff; padding: 15px; border-radius: 10px; border-left: 4px solid #3b82f6;'>
+                <strong style='color: #1e40af;'>ROC-AUC Score (0.822)</strong>
+                <p style='margin: 5px 0 0 0; color: #4b5563; font-size: 0.9rem;'>
+                    Measures how well the model discriminates between toxic and non-toxic compounds. 
+                    Ranges 0.5 (random) to 1.0 (perfect). <strong>>0.8 is considered "good"</strong>, >0.9 is "excellent".
+                </p>
+            </div>
+            <div style='background: #fef3c7; padding: 15px; border-radius: 10px; border-left: 4px solid #f59e0b;'>
+                <strong style='color: #92400e;'>Precision (78%)</strong>
+                <p style='margin: 5px 0 0 0; color: #4b5563; font-size: 0.9rem;'>
+                    When the model predicts "TOXIC", it's correct 78% of the time. High precision means <strong>fewer false alarms</strong> - 
+                    important in drug development to avoid discarding promising compounds.
+                </p>
+            </div>
+            <div style='background: #fce7f3; padding: 15px; border-radius: 10px; border-left: 4px solid #ec4899;'>
+                <strong style='color: #9d174d;'>Recall (78%)</strong>
+                <p style='margin: 5px 0 0 0; color: #4b5563; font-size: 0.9rem;'>
+                    The model catches 78% of all truly toxic compounds. High recall is <strong>critical for safety</strong> - 
+                    we don't want toxic molecules to slip through undetected.
+                </p>
+            </div>
+        </div>
+        
+        <h4 style='color: #6366f1; margin: 25px 0 15px 0;'>💊 Drug-Likeness (Lipinski's Rule of Five)</h4>
+        <p style='color: #4b5563; font-size: 0.9rem; margin-bottom: 15px;'>
+            These rules predict whether a compound can be an effective oral drug. <strong>~90% of FDA-approved oral drugs</strong> follow these guidelines.
+        </p>
+        <div style='display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;'>
+            <div style='background: #f5f3ff; padding: 12px; border-radius: 8px; text-align: center;'>
+                <div style='font-size: 1.5rem; font-weight: 800; color: #7c3aed;'>MW < 500</div>
+                <div style='color: #6b7280; font-size: 0.85rem; margin-top: 5px;'>Molecular Weight (Da)</div>
+                <div style='color: #4b5563; font-size: 0.8rem; margin-top: 8px;'>Larger molecules struggle to cross cell membranes</div>
+            </div>
+            <div style='background: #f5f3ff; padding: 12px; border-radius: 8px; text-align: center;'>
+                <div style='font-size: 1.5rem; font-weight: 800; color: #7c3aed;'>LogP < 5</div>
+                <div style='color: #6b7280; font-size: 0.85rem; margin-top: 5px;'>Lipophilicity</div>
+                <div style='color: #4b5563; font-size: 0.8rem; margin-top: 8px;'>Too fat-soluble = poor absorption, accumulation</div>
+            </div>
+            <div style='background: #f5f3ff; padding: 12px; border-radius: 8px; text-align: center;'>
+                <div style='font-size: 1.5rem; font-weight: 800; color: #7c3aed;'>HBD < 5</div>
+                <div style='color: #6b7280; font-size: 0.85rem; margin-top: 5px;'>H-Bond Donors</div>
+                <div style='color: #4b5563; font-size: 0.8rem; margin-top: 8px;'>Too many = can't cross lipid membranes</div>
+            </div>
+            <div style='background: #f5f3ff; padding: 12px; border-radius: 8px; text-align: center;'>
+                <div style='font-size: 1.5rem; font-weight: 800; color: #7c3aed;'>HBA < 10</div>
+                <div style='color: #6b7280; font-size: 0.85rem; margin-top: 5px;'>H-Bond Acceptors</div>
+                <div style='color: #4b5563; font-size: 0.8rem; margin-top: 8px;'>Affects permeability and solubility</div>
+            </div>
+        </div>
+        
+        <h4 style='color: #6366f1; margin: 25px 0 15px 0;'>🧠 BBB Permeability</h4>
+        <div style='background: #ecfeff; padding: 15px; border-radius: 10px; border-left: 4px solid #06b6d4;'>
+            <strong style='color: #0e7490;'>Blood-Brain Barrier (BBB)</strong>
+            <p style='margin: 5px 0 0 0; color: #4b5563; font-size: 0.9rem;'>
+                Predicts if a molecule can cross into the brain. <strong>Essential for CNS drugs</strong> (need to reach brain) 
+                but should be avoided for drugs that shouldn't cause neurological effects.
+            </p>
+        </div>
+        
+        <h4 style='color: #6366f1; margin: 25px 0 15px 0;'>🎨 Toxicity Heatmap</h4>
+        <div style='background: #fef2f2; padding: 15px; border-radius: 10px; border-left: 4px solid #ef4444;'>
+            <div style='display: flex; gap: 20px; flex-wrap: wrap;'>
+                <div>
+                    <span style='display: inline-block; width: 20px; height: 20px; background: #ef4444; border-radius: 4px; vertical-align: middle;'></span>
+                    <strong style='color: #b91c1c; margin-left: 8px;'>Red atoms</strong>
+                    <span style='color: #4b5563;'> → Contribute to toxicity</span>
+                </div>
+                <div>
+                    <span style='display: inline-block; width: 20px; height: 20px; background: #22c55e; border-radius: 4px; vertical-align: middle;'></span>
+                    <strong style='color: #166534; margin-left: 8px;'>Green atoms</strong>
+                    <span style='color: #4b5563;'> → Reduce toxicity (protective)</span>
+                </div>
+            </div>
+            <p style='margin: 10px 0 0 0; color: #4b5563; font-size: 0.9rem;'>
+                This visualization helps medicinal chemists understand <strong>which parts of the molecule to modify</strong> 
+                to reduce toxicity while preserving activity.
+            </p>
+        </div>
+    </div>""")
 
 # Page routing with updated names
 if page == "🔬 Single Prediction":
